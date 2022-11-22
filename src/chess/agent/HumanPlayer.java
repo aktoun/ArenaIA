@@ -1,12 +1,18 @@
 package chess.agent;
 
 import chess.Board;
+import chess.Chess;
+import chess.algo.MiniMax;
 
 public class HumanPlayer extends Player {
 
-	public HumanPlayer(int arg, Board board) {
+
+	private MiniMax algo;
+
+	public HumanPlayer(int arg, Chess game) {
 		setColor(arg);
-		this.playGround = board;
+		this.game = game;
+		this.algo = new MiniMax();
 	}
 
 	@Override
@@ -19,52 +25,33 @@ public class HumanPlayer extends Player {
 		 * if(!playGround.getGrid()[mv.xI][mv.yI].getPiece().isMoveLegal(mv)) return
 		 * false; playGround.movePiece(mv);
 		 */
-			return true;
+		return true;
 	}
 
 	@Override
-	public Move makeMove() {
-		Move mv;
-		char initialX = '\0';
-		char initialY = '\0';
-		char finalX = '\0';
-		char finalY = '\0';
-		do{				
-			System.out.print ("Votre coup ? (ex: a2a4) ");				
-			initialX = Lire();
-			initialY = Lire();
-			finalX = Lire();
-			finalY = Lire();
-			ViderBuffer();
+	public Move doMove(Move move) {
 
-			mv = new Move(initialX-'a', initialY-'1', finalX - 'a', 	finalY-'1');
-		}
-		while(!makeMove(mv));
+		Board b = this.game.getBoard().deepClone();
+		algo.setBoard(b);
+		Move mv = algo.getReply(Player.BLACK);
+		System.out.println("final move = "+mv.toString());
+
+		this.game.getBoard().movePiece(mv);
+		this.game.getBoard().print();
+
 		return mv;
 	}
-	
 
+	@Override
+	public void makeMoveTestLocal()
+	{
+		Board b = this.game.getBoard().deepClone();
+		algo.setBoard(b);
+		Move mv = algo.getReply(Player.BLACK);
+		System.out.println("final move = "+mv.toString());
 
-	private static char Lire() {
-		char C = 'A';
-		boolean OK;
-		do {
-			OK = true;
-			try {
-				C = (char) System.in.read();
-			}catch (java.io.IOException e) {
-
-				OK = false;
-			}
-		} while (!OK);
-		return C;
+		this.game.getBoard().movePiece(mv);
+		this.game.getBoard().print();
 	}
 
-	private static void ViderBuffer() {
-		try {
-			while (System.in.read() != '\n')
-				;
-		} catch (java.io.IOException e) {
-		}
-	}
 }

@@ -1,38 +1,44 @@
 package chess.piece;
 
+import java.util.List;
+
+import chess.Spot;
 import chess.agent.Move;
+import chess.agent.Player;
 
 public abstract class Piece {
-	 protected int player;
-     
-     public Piece() {
+	
+	public static final int SIZE = 8; // size of board
+	protected Player p;
+    
+    public Piece() {
 		// TODO Auto-generated constructor stub
 	}
-     
-     public Piece(int player) {
+    
+    public Piece(Player p) {
 		// TODO Auto-generated constructor stub
-    	 setPlayer(player);
+   	 	setPlayer(p);
 	}
-	public int getPlayer() {
-             return player;
-     }
-     public void setPlayer(int player) {
-             this.player = player;
-     }
+	public Player getPlayer() {
+            return this.p;
+    }
+    public void setPlayer(Player player) {
+            this.p = player;
+    }
+
      public abstract boolean isMoveLegal(Move mv);
 
+     public abstract List<Move> getBasicMove(Spot c);
+     public abstract List<Move> getAttackMove(Spot c);
+     
+     public abstract int getCost();
+
      public abstract String toString();
+     
      public void print(){
              System.out.println(this.toString()); 
      }
-     @Override
-	public Object clone() { 
-		try{
-			return super.clone();
-		}
-		catch (CloneNotSupportedException e){
-			System.out.println(e);
-		}
-		return null;
-	}
+     
+     
+	public abstract Piece clone();
 }

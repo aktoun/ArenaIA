@@ -24,37 +24,43 @@ public class Board {
 		}
 	}
 
-	public void setupChessBoard() {
+	public void setupChessBoard(Player white, Player black) {
 
 		for (int x = 0; x < SIZE; x++) {
-			grid[x][1].setPiece(new Pawn(Player.WHITE));
-			grid[x][6].setPiece(new Pawn(Player.BLACK));
+			grid[x][1].setPiece(new Pawn(white));
+			grid[x][6].setPiece(new Pawn(black));
 		}
 		for (int x = 2; x < 8; x += 3) {
-			grid[x][0].setPiece(new Bishop(Player.WHITE));
-			grid[x][7].setPiece(new Bishop(Player.BLACK));
+			grid[x][0].setPiece(new Bishop(white));
+			grid[x][7].setPiece(new Bishop(black));
 		}
 
 		for (int x = 1; x < 8; x += 5) {
-			grid[x][0].setPiece(new Knight(Player.WHITE));
-			grid[x][7].setPiece(new Knight(Player.BLACK));
+			grid[x][0].setPiece(new Knight(white));
+			grid[x][7].setPiece(new Knight(black));
 		}
 
 		for (int x = 0; x < 8; x += 7) {
-			grid[x][0].setPiece(new Rook(Player.WHITE));
-			grid[x][7].setPiece(new Rook(Player.BLACK));
+			grid[x][0].setPiece(new Rook(white));
+			grid[x][7].setPiece(new Rook(black));
 		}
 
-		grid[3][0].setPiece(new Queen(Player.WHITE));
-		grid[3][7].setPiece(new Queen(Player.BLACK));
+		grid[3][0].setPiece(new Queen(white));
+		grid[3][7].setPiece(new Queen(black));
 
-		grid[4][0].setPiece(new King(Player.WHITE));
-		grid[4][7].setPiece(new King(Player.BLACK));
+		grid[4][0].setPiece(new King(white));
+		grid[4][7].setPiece(new King(black));
 	}
 
 	public void movePiece(Move mv) {
 		grid[mv.xF][mv.yF].setPiece(grid[mv.xI][mv.yI].getPiece());
 		grid[mv.xI][mv.yI].release();
+	}
+	
+	public void undoMove(Move mv)
+	{
+		grid[mv.xI][mv.yI].setPiece(grid[mv.xF][mv.yF].getPiece());
+		grid[mv.xF][mv.yF].release();
 	}
 
 	public Spot[][] getGrid() {
@@ -89,14 +95,34 @@ public class Board {
 	public void print() {
 		System.out.println(this.toString());
 	}
+	
+	public Spot getKingSpot(int color)
+	{
+		for (int y = 0; y < SIZE; y++)
+		{
+			for (int x = 0; x < SIZE; x++)
+			{
+				if (this.grid[y][x].isOccupied() && this.grid[y][x].getPiece().getClass() == King.class)
+				{
+					if(this.grid[y][x].getPiece().getPlayer().getColor() == color)
+						return this.grid[y][x];
+				}
+			}
+		}
+		return null;
+	}
 
-	@Override
-	public Object clone() {
+	public Board deepClone() {
 		Board b = new Board();
 		for (int y = 0; y < SIZE; y++)
 			for (int x = 0; x < SIZE; x++)
-				b.getGrid()[y][x].setPiece((Piece) grid[y][x].getPiece().clone());
-
+			{
+				if(this.grid[y][x].isOccupied())
+				{
+					Piece p = this.grid[y][x].getPiece().clone();
+					b.getGrid()[y][x].setPiece(p);
+				}
+			}
 		return b;
 	}
 

@@ -1,19 +1,23 @@
 package chess.agent;
 
 import chess.Board;
+import chess.Chess;
 
 public abstract class Player {
 	public static final int WHITE = 1;
-	public static final int BLACK = 0;
+	public static final int BLACK = -1;
 	
 	protected int Colour;
-	protected Board playGround;
+	protected Chess game;
 
 	public Board getPlayGround() {
-		return playGround;
+		return this.game.getBoard();
 	}
+	
 	public abstract boolean makeMove(Move mv);
-	public abstract Move makeMove();
+	public abstract Move doMove(Move mv);
+	
+	public abstract void makeMoveTestLocal();
 	
 	public int getColor(){
 		return this.Colour;

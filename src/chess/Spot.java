@@ -5,7 +5,7 @@ import chess.piece.Piece;
 public class Spot {
 	private boolean occupied;
 	private Piece piece;
-	private int xPos, yPos;
+	public int xPos, yPos;
 
 	public Spot(int x, int y) {
 		this.xPos = x;
@@ -48,7 +48,7 @@ public class Spot {
 
 	@Override
 	public String toString() {
-		String s = xPos + "" + yPos;
+		String s = "x = " + xPos + " et y = " + yPos;
 		return s;
 	}
 

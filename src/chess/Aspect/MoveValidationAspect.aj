@@ -1,9 +1,14 @@
 package chess.Aspect;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import chess.Board;
+import chess.Spot;
 import chess.agent.Move;
 import chess.agent.Player;
 import chess.piece.Knight;
+import chess.piece.Pawn;
 
 public aspect MoveValidationAspect {
 
@@ -34,7 +39,7 @@ public aspect MoveValidationAspect {
 		}
 
 		// b) cette pièce lui appartient
-		if (player.getPlayGround().getGrid()[mv.xI][mv.yI].getPiece().getPlayer() == player.getColor())
+		if (player.getPlayGround().getGrid()[mv.xI][mv.yI].getPiece().getPlayer().getColor() != player.getColor())
 		{
 			//System.out.println("Cette pièce ne vous appartient pas ! ");
 			return false;
@@ -49,17 +54,31 @@ public aspect MoveValidationAspect {
 		
 		
 		// e) la pièce ne mange pas une pièce qui appartient à ce même joueur
-		if (player.getPlayGround().getGrid()[mv.xF][mv.yF].isOccupied() &&
-				player.getPlayGround().getGrid()[mv.xF][mv.yF].getPiece().getPlayer() != player.getColor())
+		if (player.getPlayGround().getGrid()[mv.xF][mv.yF].isOccupied())
 		{
-			//System.out.println("Une pièce qui vous appartient se trouve sur la case finale ! ");
-			return false;
+			if (player.getPlayGround().getGrid()[mv.xF][mv.yF].getPiece().getPlayer().getColor() == player.getColor())
+			{	
+				//System.out.println("Une pièce qui vous appartient se trouve sur la case finale ! ");
+				return false;
+			}
+		}
+		
+		// Mouvement droit pour les pions -> Interdire de manger une piece adverse
+		if (player.getPlayGround().getGrid()[mv.xF][mv.yF].isOccupied() && player.getPlayGround().getGrid()[mv.xI][mv.yI].getPiece().getClass() == Pawn.class)
+		{
+			if (player.getPlayGround().getGrid()[mv.xF][mv.yF].getPiece().getPlayer().getColor() != player.getColor())
+			{	
+				if ((Math.abs(mv.yF - mv.yI) == 1 || Math.abs(mv.yF - mv.yI) == 2) && Math.abs(mv.xF - mv.xI) == 0)
+				{
+					return false;
+				}
+			}
 		}
 		
 		// f) la pièce ne saute pas d’autres pièces, excepté pour le cavalier
         if (player.getPlayGround().getGrid()[mv.xI][mv.yI].getPiece().getClass() != Knight.class) 
         {
-            // Horizontal
+        	// Horizontal
             if (mv.yI == mv.yF) {
             	if(!checkHorizontalMovement(player, mv))
             	{
@@ -86,16 +105,30 @@ public aspect MoveValidationAspect {
             	}
             }
         }
+        
+        // f) interdire l'attaque des pawns
+        if (player.getPlayGround().getGrid()[mv.xI][mv.yI].getPiece().getClass() == Pawn.class) 
+        {
+        	Spot c = player.getPlayGround().getGrid()[mv.xI][mv.yI];
+        	List<Move> attackPawnMoves = c.getPiece().getAttackMove(c);	
+        	
+        	for (Move move : attackPawnMoves) {
+				if(move.toString().equals(mv.toString()))
+					if(!(player.getPlayGround().getGrid()[mv.xF][mv.yF].isOccupied() &&
+							player.getPlayGround().getGrid()[mv.xF][mv.yF].getPiece().getPlayer().getColor() != player.getColor()))
+						return false;
+			}
+        }
 		
 		// Movement is valid
-		player.getPlayGround().movePiece(mv);
+		//player.getPlayGround().movePiece(mv);
 		
         return true;
     }
     
     private boolean checkHorizontalMovement(Player p, Move mv)
     {
-		// On ne vérifie pas la case initiale
+    	// On ne vérifie pas la case initiale
     	int xPos = mv.xI+1;
     	int xMax = mv.xF;
     	
@@ -115,7 +148,7 @@ public aspect MoveValidationAspect {
     
     private boolean checkVerticalMovement(Player p, Move mv)
     {
-		// On ne vérifie pas la case initiale
+    	// On ne vérifie pas la case initiale
     	int yPos = mv.yI+1;
     	int yMax = mv.yF;
     	

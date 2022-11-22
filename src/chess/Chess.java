@@ -1,5 +1,6 @@
 package chess;
 
+import chess.UCI.UCI;
 import chess.agent.AiPlayer;
 import chess.agent.HumanPlayer;
 import chess.agent.Player;
@@ -7,11 +8,15 @@ import chess.agent.Player;
 public class Chess {
 
 	protected Board board;
+	protected Player minmax;
+	protected Player ordi;
 
 	public Chess() {
 
 		board = new Board();
-		board.setupChessBoard();
+		this.minmax = new HumanPlayer(Player.BLACK, this);
+		this.ordi = new AiPlayer(Player.WHITE, this);
+		board.setupChessBoard(ordi, minmax);
 
 	}
 
@@ -23,21 +28,32 @@ public class Chess {
 		this.board = board;
 	}
 	
+	public Player getOrdiPlayer()
+	{
+		return this.ordi;
+	}
+	
+	public Player getMinMaxPlayer()
+	{
+		return this.minmax;
+	}
+	
 
 
 	private void play() {
-		Player hp = new HumanPlayer(Player.BLACK, board);
-		Player ap = new AiPlayer(Player.WHITE, board);
+/*
+		while (true){			
+			// TOUR IA
+			ordi.makeMoveTestLocal();
 
-		while (true){
-			board.print();
-			hp.makeMove();
-			board.print();
-			ap.makeMove();				
+			// TOUR MINMAX
+			minmax.makeMoveTestLocal();
 		}
+*/
 	}
 	
 	public static void main(String[] args) {
-		new Chess().play();
+		//new Chess().play();
+		UCI.uciCommunication();
 	}
 }
