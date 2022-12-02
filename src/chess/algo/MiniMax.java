@@ -79,7 +79,7 @@ public class MiniMax extends MoveAlgo {
 			}
 		}
 		allmoves.removeAll(moveToRemove);
-
+		System.out.println("best Max:" + best);
 		return best;
 	}
 
@@ -116,7 +116,7 @@ public class MiniMax extends MoveAlgo {
 			}
 		}
 		allmoves.removeAll(moveToRemove);
-		
+		System.out.println("best Min:" + best);
 		return best;
 	}
 

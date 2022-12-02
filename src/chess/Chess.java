@@ -41,7 +41,6 @@ public class Chess {
 
 
 	private void play() {
-/*
 		while (true){			
 			// TOUR IA
 			ordi.makeMoveTestLocal();
@@ -49,11 +48,10 @@ public class Chess {
 			// TOUR MINMAX
 			minmax.makeMoveTestLocal();
 		}
-*/
 	}
 	
 	public static void main(String[] args) {
-		//new Chess().play();
-		UCI.uciCommunication();
+		new Chess().play();
+		//UCI.uciCommunication();
 	}
 }

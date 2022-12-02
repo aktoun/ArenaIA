@@ -9,7 +9,7 @@ import chess.agent.Player;
 
 public class Bishop extends Piece {
 
-	private final int cost = 10;
+	private final int cost = 5;
 
 	public Bishop(Player player) {
 		super(player);

@@ -2,17 +2,20 @@ package chess.agent;
 
 import chess.Board;
 import chess.Chess;
+import chess.algo.AlphaBeta;
 import chess.algo.MiniMax;
 
 public class HumanPlayer extends Player {
 
 
-	private MiniMax algo;
+	private AlphaBeta algo;
+	//private MiniMax algo;
 
 	public HumanPlayer(int arg, Chess game) {
 		setColor(arg);
 		this.game = game;
-		this.algo = new MiniMax();
+		//this.algo = new MiniMax();
+		this.algo = new AlphaBeta();
 	}
 
 	@Override

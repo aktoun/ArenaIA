@@ -26,7 +26,7 @@ public class MoveAlgo {
 	//protected Random rnd = new Random();
 
 	// The number of levels in the tree to be searched.
-	protected int dd = 3;       // Depth
+	protected int dd = 5;       // Depth
 
 	protected int stepcounter;  // Total node count
 	protected Move mm;          // Current move
@@ -46,7 +46,7 @@ public class MoveAlgo {
 	}
 
 	protected void setDefaults() {
-		dd = 3;       // Depth
+		dd = 5;       // Depth
 
 		stepcounter = 0;  // Total node count
 		mm = null;          // Current move
